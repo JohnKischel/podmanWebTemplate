@@ -1,0 +1,8 @@
+//ignore nextjs files
+
+node_modules
+.next
+
+__pycache__
+*.py[cod]
+*$py.class

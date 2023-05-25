@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  api:
+    container_name: appapi
+    image: appapi
+    build:
+      context: ./app_api
+    volumes:
+      - ./app_api:/app
+    restart: always
+    networks:
+      - backend
+
+  frontend:
+    container_name: appfrontend
+    image: appfrontend
+    build:
+      context: ./app_frontend
+    volumes:
+      - ./app_frontend:/app
+    restart: always
+    networks:
+      - backend
+
+  database:
+    image: postgres:latest
+    container_name: appdatabase
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ./app_database:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  loadbalancer:
+    image: nginx:latest
+    container_name: apploadbalancer
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - ./app_loadbalancer/conf.d:/etc/nginx/conf.d/:rw
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: backend
