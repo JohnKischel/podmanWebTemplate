@@ -11,6 +11,8 @@ services:
     restart: always
     networks:
       - backend
+    depends_on:
+      - dbend
 
   frontend:
     container_name: appfrontend
@@ -22,6 +24,9 @@ services:
     restart: always
     networks:
       - backend
+    depends_on:
+      - dbend
+      - api
 
   dbend:
     image: postgres:latest
@@ -44,6 +49,10 @@ services:
       - 80:80
       - 443:443
       - 8080:8080
+    depends_on:
+      - api
+      - dbend
+      - frontend
 
     volumes:
       - ./app_loadbalancer/conf.d:/etc/nginx/conf.d/:rw
